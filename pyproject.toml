@@ -1,0 +1,22 @@
+[project]
+name = "test-browser-use"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12.6"
+dependencies = [
+    "black>=25.1.0",
+    "browser-use>=0.1.41",
+    "imageio>=2.37.0",
+    "mypy>=1.15.0",
+    "PyPDF2>=3.0.1",
+    "colorama>=0.4.4",
+    "mypy>=1.15.0",
+    "pydantic>=2.10.4",
+    "pytest>=7.0.0",
+    "requests>=2.25.0",
+    "types-colorama>=0.4.15.20240311",
+    "types-requests>=2.32.0.20250328",
+    "urllib3>=1.26.0",
+    "reportlab>=4.4.0"
+]
