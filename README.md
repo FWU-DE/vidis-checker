@@ -26,12 +26,12 @@
    uv sync
    ```
 
-## Running Tasks
+## Running the Agent
 
 Run tasks with:
 
 ```sh
-uv run python run_task.py [OPTIONS]
+uv run python run_agent.py [OPTIONS]
 ```
 
 ### Options
@@ -50,7 +50,7 @@ uv run python run_task.py [OPTIONS]
 
 ```sh
 # Run the legal task
-uv run python run_task.py --url https://schooltogo.de --tasks legal
+uv run python run_agent.py --url https://schooltogo.de --task legal --output schooltogo_legal.zip
 ```
 
 ### Task Descriptions
@@ -66,24 +66,43 @@ uv run python run_task.py --url https://schooltogo.de --tasks legal
 
 All results are saved to the `./tmp` directory, organized by task name. Each task folder contains:
 
-## Checking Task Results
+## Run Classification
 
-Check task results with:
+Run classification with:
 
 ```sh
-uv run python check_task_result.py --input [TASK_NAME] --output [OUTPUT_PATH]
+uv run python run_classification.py --input_name [INPUT_NAME] --output_name [OUTPUT_NAME]
 ```
 
 ### Options
 
-- `--input`: Name of the task to check
-- `--output`: Path to save the PDF report to
+- `--input_name`: Name of the task to check
+- `--output_name`: Path to save the PDF report to
 
 ### Examples
 
 ```sh
 # Check the legal task and save the report to report.pdf
-uv run python check_task_result.py --input schooltogo_legal --output report.pdf
+uv run python run_classification.py --input_name schooltogo_legal --output_name schooltogo_legal_classification
+```
+
+## Generate Report
+
+Generate report with:
+
+```sh
+uv run python generate_report.py --input_name [INPUT_NAME] --output_name [OUTPUT_NAME]
+```
+
+### Options
+
+- `--input_name`: Name of the task to check
+- `--output_name`: Path to save the PDF report to
+
+### Examples
+
+```sh
+uv run python generate_report.py --input_name schooltogo_legal --output_name schooltogo_legal_report
 ```
 
 ## Criteria

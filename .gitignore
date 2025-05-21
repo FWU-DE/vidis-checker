@@ -6,4 +6,8 @@ __pycache__
 .pytest_cache
 .venv
 **/*.json
+!src/classification/cookie_db.json
 **/*.pdf
+agent_results
+classification_results
+reports
