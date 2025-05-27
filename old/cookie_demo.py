@@ -1,7 +1,6 @@
 from src.classification.cookie import get_cookie_check_results
 from src.report.report import Report
 import datetime
-from typing import Union
 from src.classification.cookie import CookieDbCheckResult, CookieLLMCheckResult
 
 
@@ -59,9 +58,7 @@ if __name__ == "__main__":
             report.add_text(
                 f"<b>Cookie Name:</b> {result.cookie_name}", report.body_style
             )
-            report.add_text(
-                f"<b>Domain:</b> {result.cookie.domain}", report.body_style
-            )
+            report.add_text(f"<b>Domain:</b> {result.cookie.domain}", report.body_style)
 
             if result.is_essential:
                 report.add_result("✓", "Essential Cookie", "#27AE60")

@@ -1,5 +1,5 @@
+import os
 from .util import (
-    generate_completion,
     read_text_from_pdf,
     generate_structured_completion,
 )
@@ -121,6 +121,62 @@ def check_terms_of_use_from_text(terms_of_use_text: str, processor_only: bool = 
 
 
 def check_terms_of_use(file_path: str, processor_only: bool = False):
+    if not os.path.exists(file_path):
+        if processor_only:
+            # Return a result with all bools set to False and explanations indicating the file was not found
+            return TermsOfUseProcessorOnlyCheckResult(
+                explanation_written_agreement="Die AGBs konnten nicht gefunden werden",
+                written_agreement=False,
+                explanation_processing_instructions="Die AGBs konnten nicht gefunden werden",
+                processing_instructions=False,
+                explanation_confidentiality="Die AGBs konnten nicht gefunden werden",
+                confidentiality=False,
+                explanation_security_measures="Die AGBs konnten nicht gefunden werden",
+                security_measures=False,
+                explanation_subprocessors="Die AGBs konnten nicht gefunden werden",
+                subprocessors=False,
+                explanation_data_subject_rights_support="Die AGBs konnten nicht gefunden werden",
+                data_subject_rights_support=False,
+                explanation_security_support="Die AGBs konnten nicht gefunden werden",
+                security_support=False,
+                explanation_deletion_return="Die AGBs konnten nicht gefunden werden",
+                deletion_return=False,
+                explanation_audit_rights="Die AGBs konnten nicht gefunden werden",
+                audit_rights=False,
+                explanation_liability_limitations="Die AGBs konnten nicht gefunden werden",
+                liability_limitations=False,
+                is_valid=False,
+            )
+        else:
+            # Return a result with all bools set to False and explanations indicating the file was not found
+            return TermsOfUseCheckResult(
+                explanation_transparency_and_lawfulness="Die AGBs konnten nicht gefunden werden",
+                transparency_and_lawfulness=False,
+                explanation_purpose_limitation="Die AGBs konnten nicht gefunden werden",
+                purpose_limitation=False,
+                explanation_data_minimization="Die AGBs konnten nicht gefunden werden",
+                data_minimization=False,
+                explanation_consent_clauses="Die AGBs konnten nicht gefunden werden",
+                consent_clauses=False,
+                explanation_cookie_tracking_consent="Die AGBs konnten nicht gefunden werden",
+                cookie_tracking_consent=False,
+                explanation_data_subject_rights="Die AGBs konnten nicht gefunden werden",
+                data_subject_rights=False,
+                explanation_objection_and_opt_out="Die AGBs konnten nicht gefunden werden",
+                objection_and_opt_out=False,
+                explanation_third_country_transfers="Die AGBs konnten nicht gefunden werden",
+                third_country_transfers=False,
+                explanation_processors="Die AGBs konnten nicht gefunden werden",
+                processors=False,
+                explanation_profiling="Die AGBs konnten nicht gefunden werden",
+                profiling=False,
+                explanation_amendment_clauses="Die AGBs konnten nicht gefunden werden",
+                amendment_clauses=False,
+                explanation_liability_clauses="Die AGBs konnten nicht gefunden werden",
+                liability_clauses=False,
+                is_valid=False,
+            )
+
     terms_of_use_text = read_text_from_pdf(file_path)
     return check_terms_of_use_from_text(terms_of_use_text, processor_only)
 

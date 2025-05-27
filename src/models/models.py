@@ -1,6 +1,15 @@
 from typing import Dict, List, Optional
 from pydantic import BaseModel
 
+from typing import Literal
+
+
+class PageTypes(BaseModel):
+    page_type: Literal[
+        "privacy_policy",
+        "imprint",
+        "terms_of_use",
+    ]
 
 
 class Cookie(BaseModel):
@@ -13,11 +22,14 @@ class Cookie(BaseModel):
     secure: bool
     sameSite: str
 
+
 class LocalStorage(BaseModel):
     entries: Dict[str, str]
 
+
 class SessionStorage(BaseModel):
     entries: Dict[str, str]
+
 
 class Resource(BaseModel):
     type: str
@@ -33,9 +45,9 @@ class NetworkRequest(BaseModel):
     method: str
     headers: Dict[str, str]
     resource_type: str
-    task_name: str
     timestamp: float
     post_data: Optional[str] = None
+
 
 class NetworkResponse(BaseModel):
     url: str
@@ -43,9 +55,11 @@ class NetworkResponse(BaseModel):
     status: int
     text: Optional[str] = None
 
+
 class NetworkRequestResponsePair(BaseModel):
     request: NetworkRequest
     response: NetworkResponse
+
 
 class StepResult(BaseModel):
     url: str

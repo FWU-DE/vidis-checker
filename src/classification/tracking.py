@@ -1,7 +1,6 @@
 import json
 import os
-from typing import List, Dict, Any, Optional, Tuple, Union, Set
-from dataclasses import dataclass
+from typing import List, Dict, Any, Set
 
 from pydantic import BaseModel
 
@@ -15,7 +14,6 @@ class SingleTrackingPixelIssue(BaseModel):
 
 class TrackingPixelIssues(BaseModel):
     issues: List[SingleTrackingPixelIssue]
-
 
 
 def _read_network_requests(
@@ -40,9 +38,8 @@ def _read_network_requests(
         print(f"Error reading network requests from {network_requests_path}: {e}")
         return []
 
-def check_for_tracking_pixels(
-    step_result: StepResult
-) -> TrackingPixelIssues:
+
+def check_for_tracking_pixels(step_result: StepResult) -> TrackingPixelIssues:
     """
     Check for tracking pixels in the step result resources
 
@@ -60,8 +57,10 @@ def check_for_tracking_pixels(
         # Check for tiny images (tracking pixels)
         if (
             resource.type == "img"
-            and resource.width is not None and resource.width <= 2
-            and resource.height is not None and resource.height <= 2
+            and resource.width is not None
+            and resource.width <= 2
+            and resource.height is not None
+            and resource.height <= 2
         ):
             width = resource.width
             height = resource.height
@@ -82,7 +81,7 @@ def check_for_tracking_pixels(
         request = pair.request
         if request.resource_type == "image":
             request_url = request.url
-            
+
             # Only add if we haven't seen this URL before and it's not already identified
             if request_url not in processed_urls:
                 # We don't have size information in the request, so we make a general note

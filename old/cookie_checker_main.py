@@ -1,11 +1,9 @@
-import argparse
 from typing import Dict, Optional, List, Set
 import os
 import zipfile
 import shutil
 import datetime
 import json
-import sys
 
 from .classification.cookie import get_cookie_issues
 from .classification.tracking import check_for_tracking_pixels, analyze_tracking

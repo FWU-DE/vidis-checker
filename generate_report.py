@@ -1,5 +1,6 @@
 import argparse
 import os
+from src.classification.images import ContentCheckResult
 from src.classification.encryption import EncryptionCheckResult
 from src.classification.imprint import ImprintCheckResult
 from src.classification.privacy_policy import PrivacyPolicyCheckResult
@@ -15,53 +16,6 @@ from src.classification.terms_of_use import (
     TermsOfUseProcessorOnlyCheckResult,
 )
 from vidis_criteria import VIDIS_CRITERIA, VidisCriterion
-
-args = argparse.ArgumentParser()
-args.add_argument("--input_name", type=str, required=True)
-args.add_argument("--output_name", type=str, required=True)
-args = args.parse_args()
-
-input_name = args.input_name
-input_dir = f"classification_results/{input_name}"
-
-report_name = args.output_name
-report_dir = f"reports/{report_name}"
-report_path = f"{report_dir}/report.pdf"
-
-if not os.path.exists(report_dir):
-    os.makedirs(report_dir, exist_ok=True)
-
-cookie_results = CookieCheckResult.model_validate_json(open(f"{input_dir}/cookie_results.json").read())
-tracking_issues = TrackingPixelIssues.model_validate_json(
-    open(f"{input_dir}/tracking_issues.json").read()
-)
-local_storage_results = StorageCheckResult.model_validate_json(
-    open(f"{input_dir}/local_storage_results.json").read()
-)
-session_storage_results = StorageCheckResult.model_validate_json(
-    open(f"{input_dir}/session_storage_results.json").read()
-)
-privacy_policy_result = PrivacyPolicyCheckResult.model_validate_json(
-    open(f"{input_dir}/privacy_policy_result.json").read()
-)
-imprint_result = ImprintCheckResult.model_validate_json(
-    open(f"{input_dir}/imprint_result.json").read()
-)
-terms_of_use_result = TermsOfUseCheckResult.model_validate_json(
-    open(f"{input_dir}/terms_of_use_result.json").read()
-)
-terms_of_use_result_processor_only = (
-    TermsOfUseProcessorOnlyCheckResult.model_validate_json(
-        open(f"{input_dir}/terms_of_use_result_processor_only.json").read()
-    )
-)
-encryption_result = EncryptionCheckResult.model_validate_json(
-    open(f"{input_dir}/encryption_result.json").read()
-)
-
-report = Report(report_path)
-
-report.add_title("Vidis Report")
 
 
 def add_vidis_criterion_to_report(report: Report, criterion: VidisCriterion):
@@ -654,6 +608,47 @@ def add_rds_agb_369_to_report(
         )
 
 
+def add_rds_vin_354_to_report(report: Report, image_content_result: ContentCheckResult):
+    add_vidis_criterion_to_report(report, VIDIS_CRITERIA["RDS-VIN-354"])
+
+    report.add_separator()
+    if image_content_result.is_youth_secure:
+        report.add_success("Das Angebot ist jugendmedienschutzrechtlich unbedenklich.")
+    else:
+        report.add_failure("Das Angebot ist jugendmedienschutzrechtlich bedenklich.")
+    
+    report.add_paragraph(
+        f"<i>{image_content_result.youth_protection_explanation}</i>"
+    )
+
+
+def add_rds_wer_384_to_report(report: Report, image_content_result: ContentCheckResult):
+    add_vidis_criterion_to_report(report, VIDIS_CRITERIA["RDS-WER-384"])
+
+    report.add_separator()
+    if not image_content_result.has_ads:
+        report.add_success("Das digitale Bildungsangebot ist werbefrei.")
+    else:
+        report.add_failure("Das digitale Bildungsangebot enthält Werbung.")
+    
+    report.add_paragraph(
+        f"<i>{image_content_result.ads_explanation}</i>"
+    )
+
+
+def add_rds_wer_385_to_report(report: Report, image_content_result: ContentCheckResult):
+    add_vidis_criterion_to_report(report, VIDIS_CRITERIA["RDS-WER-385"])
+
+    report.add_separator()
+    if not image_content_result.has_ads:
+        report.add_success("Aus dem Angebot wird nicht auf Zielseiten mit Werbung verlinkt.")
+    else:
+        report.add_failure("Aus dem Angebot wird auf Zielseiten mit Werbung verlinkt.")
+    
+    report.add_paragraph(
+        f"<i>{image_content_result.ads_explanation}</i>"
+    )
+
 def add_its_enc_359_to_report(report: Report, encryption_result: EncryptionCheckResult):
     add_vidis_criterion_to_report(report, VIDIS_CRITERIA["ITS-ENC-359"])
 
@@ -709,19 +704,88 @@ def add_its_enc_361_to_report(report: Report, encryption_result: EncryptionCheck
         )
 
 
-add_rds_cuc_371_to_report(report, cookie_results)
-add_rds_cuc_372_to_report(report, cookie_results)
-add_rds_cuc_373_to_report(report, tracking_issues)
-add_rds_cuc_374_to_report(report, local_storage_results, session_storage_results)
-add_rds_dso_383_to_report(report, privacy_policy_result)
-add_rds_ipf_364_to_report(report)
-add_rds_ipf_365_to_report(report)
-add_rds_ipf_366_to_report(report, imprint_result)
-add_rds_ipf_367_to_report(report, privacy_policy_result)
-add_rds_agb_368_to_report(report, terms_of_use_result)
-add_rds_agb_369_to_report(report, terms_of_use_result_processor_only)
-add_its_enc_359_to_report(report, encryption_result)
-add_its_enc_360_to_report(report, encryption_result)
-add_its_enc_361_to_report(report, encryption_result)
+def generate_report(input_name: str, output_name: str):
+    """Generate a VIDIS report from classification results."""
+    input_dir = f"classification_results/{input_name}"
 
-report.generate_pdf()
+    report_dir = f"reports/{output_name}"
+    report_path = f"{report_dir}/report.pdf"
+
+    if not os.path.exists(report_dir):
+        os.makedirs(report_dir, exist_ok=True)
+
+    cookie_results = CookieCheckResult.model_validate_json(
+        open(f"{input_dir}/cookie_results.json").read()
+    )
+    tracking_issues = TrackingPixelIssues.model_validate_json(
+        open(f"{input_dir}/tracking_issues.json").read()
+    )
+    local_storage_results = StorageCheckResult.model_validate_json(
+        open(f"{input_dir}/local_storage_results.json").read()
+    )
+    session_storage_results = StorageCheckResult.model_validate_json(
+        open(f"{input_dir}/session_storage_results.json").read()
+    )
+    privacy_policy_result = PrivacyPolicyCheckResult.model_validate_json(
+        open(f"{input_dir}/privacy_policy_result.json").read()
+    )
+    imprint_result = ImprintCheckResult.model_validate_json(
+        open(f"{input_dir}/imprint_result.json").read()
+    )
+    terms_of_use_result = TermsOfUseCheckResult.model_validate_json(
+        open(f"{input_dir}/terms_of_use_result.json").read()
+    )
+    terms_of_use_result_processor_only = (
+        TermsOfUseProcessorOnlyCheckResult.model_validate_json(
+            open(f"{input_dir}/terms_of_use_result_processor_only.json").read()
+        )
+    )
+    encryption_result = EncryptionCheckResult.model_validate_json(
+        open(f"{input_dir}/encryption_result.json").read()
+    )
+    image_content_result = ContentCheckResult.model_validate_json(
+        open(f"{input_dir}/image_content_result.json").read()
+    )
+
+    report = Report(report_path)
+
+    report.add_title("Vidis Report")
+
+    add_rds_cuc_371_to_report(report, cookie_results)
+    add_rds_cuc_372_to_report(report, cookie_results)
+    add_rds_cuc_373_to_report(report, tracking_issues)
+    add_rds_cuc_374_to_report(report, local_storage_results, session_storage_results)
+    add_rds_dso_383_to_report(report, privacy_policy_result)
+    add_rds_ipf_364_to_report(report)
+    add_rds_ipf_365_to_report(report)
+    add_rds_ipf_366_to_report(report, imprint_result)
+    add_rds_ipf_367_to_report(report, privacy_policy_result)
+    add_rds_agb_368_to_report(report, terms_of_use_result)
+    add_rds_agb_369_to_report(report, terms_of_use_result_processor_only)
+    add_rds_vin_354_to_report(report, image_content_result)
+    add_rds_wer_384_to_report(report, image_content_result)
+    add_rds_wer_385_to_report(report, image_content_result)
+    add_its_enc_359_to_report(report, encryption_result)
+    add_its_enc_360_to_report(report, encryption_result)
+    add_its_enc_361_to_report(report, encryption_result)
+
+    report.generate_pdf()
+
+
+if __name__ == "__main__":
+    args = argparse.ArgumentParser()
+    args.add_argument(
+        "--input_name",
+        help="Name of the input directory in the ./classification_results directory.",
+        type=str,
+        required=True,
+    )
+    args.add_argument(
+        "--output_name",
+        help="Name of the output directory in the ./reports directory. The report will be saved as report.pdf in this directory.",
+        type=str,
+        required=True,
+    )
+    args = args.parse_args()
+
+    generate_report(args.input_name, args.output_name)

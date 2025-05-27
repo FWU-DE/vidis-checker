@@ -88,6 +88,26 @@ rds_ipf_367_text = """
 Die Datenschutzerklärung enthält alle Informationen, die nach Art. 13 und 14 DSGVO vorgeschrieben sind.
 """
 
+rds_agb_368_text = """
+Die Nutzungsbedingungen oder AGB des Angebots enthalten keine Klauseln, die gegen die Grundsätze des Datenschutzes verstoßen.
+"""
+
+rds_agb_369_text = """
+Die Nutzungsbedingungen oder AGB des Angebots enthalten keine Klauseln, die gegen die Vorschriften zur Auftragsverarbeitung verstoßen.
+"""
+
+rds_vin_354_text = """
+Das Angebot ist jugendmedienschutzrechtlich unbedenklich.
+"""
+
+rds_wer_384_text = """
+Das digitale Bildungsangebot ist werbefrei, es sei denn, eine konkrete Werbung ist nach den einschlägigen Bestimmungen für Lehr- und Lernmittel ausnahmsweise zulässig
+"""
+
+rds_wer_385_text = """
+Aus dem Angebot wird für Nutzende der Benutzergruppe Schülerinnen und Schüler nicht auf Zielseiten verlinkt werden, die Werbung enthalten.
+"""
+
 its_enc_359_text = """
 Seiten des Angebots sind ausschließlich über https abrufbar.
 """
@@ -98,14 +118,6 @@ Es sind Umleitungen von http auf https konfiguriert.
 
 its_enc_361_text = """
 Veraltete TLS/SSL-Protokolle werden abgelehnt.
-"""
-
-rds_agb_368_text = """
-Die Nutzungsbedingungen oder AGB des Angebots enthalten keine Klauseln, die gegen die Grundsätze des Datenschutzes verstoßen.
-"""
-
-rds_agb_369_text = """
-Die Nutzungsbedingungen oder AGB des Angebots enthalten keine Klauseln, die gegen die Vorschriften zur Auftragsverarbeitung verstoßen.
 """
 
 VIDIS_CRITERIA = {
@@ -184,6 +196,31 @@ VIDIS_CRITERIA = {
         name="Vollständige Datenschutzerklärung",
         description=rds_ipf_367_text,
     ),
+    "RDS-AGB-368": VidisCriterion(
+        code="RDS-AGB-368",
+        name="Nutzungsbedingungen/AGB: Datenschutzkonform",
+        description=rds_agb_368_text,
+    ),
+    "RDS-AGB-369": VidisCriterion(
+        code="RDS-AGB-369",
+        name="Nutzungsbedingungen/AGB: AVV-konform",
+        description=rds_agb_369_text,
+    ),
+    "RDS-VIN-354": VidisCriterion(
+        code="RDS-VIN-354",
+        name="Jugendmedienschutz",
+        description=rds_vin_354_text,
+    ),
+    "RDS-WER-384": VidisCriterion(
+        code="RDS-WER-384",
+        name="Werbefreiheit",
+        description=rds_wer_384_text,
+    ),
+    "RDS-WER-385": VidisCriterion(
+        code="RDS-WER-385",
+        name="Verweise auf Werbeinhalte",
+        description=rds_wer_385_text,
+    ),
     "ITS-ENC-359": VidisCriterion(
         code="ITS-ENC-359",
         name="Website nur über https:// aufrufbar",
@@ -198,15 +235,5 @@ VIDIS_CRITERIA = {
         code="ITS-ENC-361",
         name="Ablehnen veralteter TLS/SSL-Protokolle",
         description=its_enc_361_text,
-    ),
-    "RDS-AGB-368": VidisCriterion(
-        code="RDS-AGB-368",
-        name="Nutzungsbedingungen/AGB: Datenschutzkonform",
-        description=rds_agb_368_text,
-    ),
-    "RDS-AGB-369": VidisCriterion(
-        code="RDS-AGB-369",
-        name="Nutzungsbedingungen/AGB: AVV-konform",
-        description=rds_agb_369_text,
     ),
 }

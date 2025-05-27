@@ -1,3 +1,4 @@
+import os
 from .util import (
     generate_structured_completion,
     read_text_from_pdf,
@@ -86,6 +87,29 @@ def check_privacy_policy_from_text(
 
 
 def check_privacy_policy(file_path: str) -> PrivacyPolicyCheckResult:
+    if not os.path.exists(file_path):
+        # Return a result with all bools set to False and explanations indicating the file was not found
+        return PrivacyPolicyCheckResult(
+            explanation_responsible_entity_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            responsible_entity_present=False,
+            explanation_dpo_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            dpo_present=False,
+            explanation_processing_purposes_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            processing_purposes_present=False,
+            explanation_legal_basis_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            legal_basis_present=False,
+            explanation_recipients_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            recipients_present=False,
+            explanation_storage_duration_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            storage_duration_present=False,
+            explanation_data_subject_rights_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            data_subject_rights_present=False,
+            explanation_data_provision_requirements_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            data_provision_requirements_present=False,
+            explanation_automated_decision_making_info_present="Die Datenschutzerklärung konnte nicht gefunden werden",
+            automated_decision_making_info_present=False,
+        )
+
     privacy_policy_text = read_text_from_pdf(file_path)
     return check_privacy_policy_from_text(privacy_policy_text)
 

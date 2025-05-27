@@ -37,30 +37,21 @@ uv run python run_agent.py [OPTIONS]
 ### Options
 
 - `--url`: URL to crawl
-- `--tasks`: Type of tasks to perform (default: all)
-  - Available tasks:
-    - `login`: Login to the website
-    - `legal`: Find and save privacy policy, terms of service, etc.
-    - `student`: Explore the website as a student
-    - `teacher`: Explore the website as a teacher
-    - `register`: Find the registration page
-    - `logout`: Find the logout functionality
+- `--max-steps`: amount of steps the agent can make
+- `--output`: Name of the output directory and zip file
+- `-number-of-pages-to-visit`: amount of individual websites that should be discovered
 
 ### Examples
 
 ```sh
-# Run the legal task
-uv run python run_agent.py --url https://schooltogo.de --task legal --output schooltogo_legal.zip
+uv run python run_agent.py --url https://schooltogo.de --output schooltogo_legal.zip --number-of-pages-to-visit 5
 ```
 
 ### Task Descriptions
 
 - **Login**: Logs in to the page
 - **Legal**: Locates and saves privacy policy, legal notices, and terms of service
-- **Student**: Navigates through the website as a student would
-- **Teacher**: Navigates through the website as a teacher would
-- **Register**: Finds the registration page and saves it
-- **Logout**: Logs in and then finds the logout functionality
+- **Browsing**: Browse through the website and visit at least `-number-of-pages-to-visit` pages
 
 ### Output
 

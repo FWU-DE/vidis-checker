@@ -1,9 +1,8 @@
+import os
 from .util import (
-    generate_completion,
     read_text_from_pdf,
     generate_structured_completion,
 )
-from typing import Type, TypeVar, List
 from pydantic import BaseModel
 
 
@@ -68,6 +67,27 @@ def check_imprint_from_text(imprint_text: str) -> ImprintCheckResult:
 
 
 def check_imprint(file_path: str) -> ImprintCheckResult:
+    if not os.path.exists(file_path):
+        # Return a result with all bools set to False and explanations indicating the file was not found
+        return ImprintCheckResult(
+            explanation_name_and_address_present="Das Impressum konnte nicht gefunden werden",
+            name_and_address_present=False,
+            explanation_legal_form_present="Das Impressum konnte nicht gefunden werden",
+            legal_form_present=False,
+            explanation_contact_info_present="Das Impressum konnte nicht gefunden werden",
+            contact_info_present=False,
+            explanation_supervisory_authority_present="Das Impressum konnte nicht gefunden werden",
+            supervisory_authority_present=False,
+            explanation_register_info_present="Das Impressum konnte nicht gefunden werden",
+            register_info_present=False,
+            explanation_tax_id_present="Das Impressum konnte nicht gefunden werden",
+            tax_id_present=False,
+            explanation_audiovisual_media_info_present="Das Impressum konnte nicht gefunden werden",
+            audiovisual_media_info_present=False,
+            explanation_legal_reference_current="Das Impressum konnte nicht gefunden werden",
+            legal_reference_current=False,
+        )
+
     imprint_text = read_text_from_pdf(file_path)
     return check_imprint_from_text(imprint_text)
 

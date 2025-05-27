@@ -3,11 +3,9 @@ from src.classification.storage import (
     get_session_storage_entries,
     check_local_storage_entries,
     check_session_storage_entries,
-    SingleStorageEntryCheckResult,
 )
 
 from src.report.report import Report
-import os
 from datetime import datetime
 
 
