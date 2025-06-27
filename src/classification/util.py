@@ -64,28 +64,30 @@ def generate_structured_completion(prompt: str, response_format: Type[T]) -> T:
     return completion.choices[0].message.parsed
 
 
-def analyze_image(image_path: str, response_format: Type[T], prompt: str = "What's in this image?") -> T:
+def analyze_image(
+    image_path: str, response_format: Type[T], prompt: str = "What's in this image?"
+) -> T:
     """
     Analyze an image using OpenAI's vision model.
-    
+
     Args:
         image_path (str): Path to the image file
         response_format (Type[T]): Expected response format
         prompt (str): Text prompt for the analysis
-        
+
     Returns:
         T: Analysis result from the model
     """
-    
+
     client = OpenAI()
-    
+
     # Function to encode the image
     def encode_image(image_path):
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode("utf-8")
-    
+
     base64_image = encode_image(image_path)
-    
+
     completion = client.beta.chat.completions.parse(
         model="gpt-4.1",
         messages=[
@@ -104,8 +106,9 @@ def analyze_image(image_path: str, response_format: Type[T], prompt: str = "What
         ],
         response_format=response_format,
     )
-    
+
     return completion.choices[0].message.parsed
+
 
 def read_text_from_pdf(path: str) -> str:
     with open(path, "rb") as file:

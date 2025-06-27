@@ -1,4 +1,5 @@
 import argparse
+from datetime import datetime
 import os
 from src.classification.images import ContentCheckResult
 from src.classification.encryption import EncryptionCheckResult
@@ -15,7 +16,7 @@ from src.classification.terms_of_use import (
     TermsOfUseCheckResult,
     TermsOfUseProcessorOnlyCheckResult,
 )
-from vidis_criteria import VIDIS_CRITERIA, VidisCriterion
+from src.models.vidis_criteria import VIDIS_CRITERIA, VidisCriterion
 
 
 def add_vidis_criterion_to_report(report: Report, criterion: VidisCriterion):
@@ -616,10 +617,8 @@ def add_rds_vin_354_to_report(report: Report, image_content_result: ContentCheck
         report.add_success("Das Angebot ist jugendmedienschutzrechtlich unbedenklich.")
     else:
         report.add_failure("Das Angebot ist jugendmedienschutzrechtlich bedenklich.")
-    
-    report.add_paragraph(
-        f"<i>{image_content_result.youth_protection_explanation}</i>"
-    )
+
+    report.add_paragraph(f"<i>{image_content_result.youth_protection_explanation}</i>")
 
 
 def add_rds_wer_384_to_report(report: Report, image_content_result: ContentCheckResult):
@@ -630,10 +629,8 @@ def add_rds_wer_384_to_report(report: Report, image_content_result: ContentCheck
         report.add_success("Das digitale Bildungsangebot ist werbefrei.")
     else:
         report.add_failure("Das digitale Bildungsangebot enthält Werbung.")
-    
-    report.add_paragraph(
-        f"<i>{image_content_result.ads_explanation}</i>"
-    )
+
+    report.add_paragraph(f"<i>{image_content_result.ads_explanation}</i>")
 
 
 def add_rds_wer_385_to_report(report: Report, image_content_result: ContentCheckResult):
@@ -641,13 +638,14 @@ def add_rds_wer_385_to_report(report: Report, image_content_result: ContentCheck
 
     report.add_separator()
     if not image_content_result.has_ads:
-        report.add_success("Aus dem Angebot wird nicht auf Zielseiten mit Werbung verlinkt.")
+        report.add_success(
+            "Aus dem Angebot wird nicht auf Zielseiten mit Werbung verlinkt."
+        )
     else:
         report.add_failure("Aus dem Angebot wird auf Zielseiten mit Werbung verlinkt.")
-    
-    report.add_paragraph(
-        f"<i>{image_content_result.ads_explanation}</i>"
-    )
+
+    report.add_paragraph(f"<i>{image_content_result.ads_explanation}</i>")
+
 
 def add_its_enc_359_to_report(report: Report, encryption_result: EncryptionCheckResult):
     add_vidis_criterion_to_report(report, VIDIS_CRITERIA["ITS-ENC-359"])
@@ -704,7 +702,7 @@ def add_its_enc_361_to_report(report: Report, encryption_result: EncryptionCheck
         )
 
 
-def generate_report(input_name: str, output_name: str):
+def generate_report(url: str, input_name: str, output_name: str):
     """Generate a VIDIS report from classification results."""
     input_dir = f"classification_results/{input_name}"
 
@@ -750,6 +748,12 @@ def generate_report(input_name: str, output_name: str):
     report = Report(report_path)
 
     report.add_title("Vidis Report")
+    report.add_paragraph(f"Report generiert für {url}")
+    report.add_paragraph(f"Zeit: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    report.add_paragraph(
+        "Dieser Report wurde automatisch generiert und ersetzt keine Rechtsberatung oder offizielle Prüfung durch VIDIS."
+    )
+    report.add_page_break()
 
     add_rds_cuc_371_to_report(report, cookie_results)
     add_rds_cuc_372_to_report(report, cookie_results)

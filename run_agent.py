@@ -1,18 +1,38 @@
 import argparse
 import asyncio
 
-from agent import VidisAgent
+from src.agent.agent import VidisAgent
 from src.agent.tasks import get_task_prompt
 from src.classification.util import generate_dirname
 
 
 async def main():
-    parser = argparse.ArgumentParser(description="Crawl the web and save the data")
+    parser = argparse.ArgumentParser(
+        description="Run the Vidis checker agent and save the results."
+    )
     parser.add_argument(
         "--url",
         type=str,
         required=True,
-        help="URL of the website to crawl. This will be the initial URL of the agent.",
+        help="URL of the website to check. This will be the initial URL the agent navigates to.",
+    )
+    parser.add_argument(
+        "--username",
+        type=str,
+        required=True,
+        help="Username for the website login.",
+    )
+    parser.add_argument(
+        "--password",
+        type=str,
+        required=True,
+        help="Password for the website login.",
+    )
+    parser.add_argument(
+        "--task-type",
+        type=str,
+        default="legal",
+        help="Type of task to run. Can be 'login', 'legal', 'student', or 'teacher'.",
     )
     parser.add_argument(
         "--output",
@@ -27,18 +47,21 @@ async def main():
         help="Maximum number of steps to run. The agent might decide to stop before this number.",
     )
     parser.add_argument(
-        "--number-of-pages-to-visit",
-        type=int,
-        default=10,
-        help="Number of pages the agent should browse.",
+        "--headless",
+        action="store_true",
+        help="Run the agent in headless mode.",
     )
+
     args = parser.parse_args()
 
     output_name = generate_dirname(args.url)
     vidis_agent = VidisAgent(
-        task_prompt=get_task_prompt(args.number_of_pages_to_visit),
+        task_prompt=get_task_prompt(args.task_type),
         initial_url=args.url,
         output_name=output_name,
+        username=args.username,
+        password=args.password,
+        headless=args.headless,
     )
     await vidis_agent.run_task(max_steps=args.max_steps)
 

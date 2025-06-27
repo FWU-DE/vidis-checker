@@ -44,7 +44,7 @@ uv run python run_agent.py [OPTIONS]
 ### Examples
 
 ```sh
-uv run python run_agent.py --url https://schooltogo.de --output schooltogo_legal.zip --number-of-pages-to-visit 5
+uv run python run_agent.py --url https://schooltogo.de --username $USERNAME --password $PASSWORD --output schooltogo_legal.zip --number-of-pages-to-visit 5
 ```
 
 ### Task Descriptions

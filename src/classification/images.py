@@ -10,6 +10,7 @@ class ContentCheckResult(BaseModel):
     youth_protection_explanation: str
     is_youth_secure: bool
 
+
 prompt = """
 Analysiere dieses Bild und führe zwei Prüfungen durch:
 
@@ -41,18 +42,22 @@ Für jede Prüfung gib eine kurze Erklärung deiner Begründung und bestimme:
 - is_youth_secure: ob der Inhalt für Jugendliche sicher ist (true wenn sicher, false wenn problematisch)
 """
 
+
 def check_page_content(image_path: str) -> ContentCheckResult:
     """
     Analyze an image to detect advertisements and check youth protection compliance.
-    
+
     Args:
         image_path (str): Path to the image file
-        
+
     Returns:
         ContentCheckResult: Result containing ad detection and youth protection analysis
-    """    
+    """
     return analyze_image(image_path, ContentCheckResult, prompt)
 
+
 if __name__ == "__main__":
-    result = check_page_content("agent_results/run_https_schooltogo.de_20250527_121048_6a5f9e65-024b-499a-be91-660f983c7929/images/step_000.png")
+    result = check_page_content(
+        "agent_results/run_https_schooltogo.de_20250527_121048_6a5f9e65-024b-499a-be91-660f983c7929/images/step_000.png"
+    )
     print(result.model_dump_json(indent=4))

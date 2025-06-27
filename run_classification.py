@@ -97,7 +97,7 @@ def run_classification(input_name: str, output_name: str):
         if os.path.exists(image_directory_path):
             for file in os.listdir(image_directory_path):
                 image_files.append(os.path.join(image_directory_path, file))
-        
+
         # TODO: We should check all images in the directory (but what about time?)
         random_image = random.choice(image_files)
         result = check_page_content(random_image)
